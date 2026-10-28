@@ -8,7 +8,7 @@
  * código do app.js continua a intercetar a roda/deslize e a impedir
  * o scroll nativo, sem o fazer avançar.
  *
- * Correção v2: além de manter o desbloqueio do preloader, este
+ * Correção v3: além de manter o desbloqueio do preloader, este
  * ficheiro interceta a roda e o deslizar VERTICAL na fase de captura
  * (documento, antes de chegarem à janela, onde o scroll suave os
  * apanha) e impede-os de chegarem lá — sem impedir o scroll nativo
@@ -16,6 +16,14 @@
  * dentro das coleções horizontais não são tocados, para não partir
  * o arrastar lateral dessas filas. O menu continua a bloquear o
  * scroll enquanto estiver aberto, como no original.
+ *
+ * Novidade v3: o próprio Lenis tem uma saída — elementos com o atributo
+ * data-lenis-prevent (ou data-lenis-prevent-wheel / -touch) são ignorados
+ * pelo scroll suave, sem impedir o scroll nativo. Por isso o #app já vem
+ * com esses atributos no index.html, e este ficheiro volta a pô-los
+ * (caso a página em cache ainda não os tenha). E o ficheiro passou a ser
+ * carregado com ?v=3, para o navegador não servir a versão antiga em
+ * cache em vez desta.
  */
 (function () {
   var tried = 0;
@@ -23,6 +31,18 @@
     var menu = document.querySelector(".menu");
     return !!(menu && menu.classList.contains("active"));
   }
+  function markPrevent() {
+    var app = document.getElementById("app");
+    if (app) {
+      app.setAttribute("data-lenis-prevent", "");
+      app.setAttribute("data-lenis-prevent-wheel", "");
+      app.setAttribute("data-lenis-prevent-touch", "");
+    }
+    document.body.setAttribute("data-lenis-prevent", "");
+    document.body.setAttribute("data-lenis-prevent-wheel", "");
+    document.body.setAttribute("data-lenis-prevent-touch", "");
+  }
+  markPrevent();
   function unlock() {
     if (menuOpen()) return;
     var enter = document.querySelector(".preloader__enter");
