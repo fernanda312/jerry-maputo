@@ -1,0 +1,15 @@
+/* JERRY · Maputo — correção do scroll (2026-10-28, ver js/scroll-fix.js).
+ * O preloader já vem escondido na cópia estática, por isso nunca pode
+ * tapar a página nem bloquear o scroll. O scroll em si fica desbloqueado
+ * quando o html tem a classe "active" (regra original do app.css); esta
+ * regra só garante isso mesmo que o JavaScript original tire a classe
+ * no arranque. O menu continua a bloquear o scroll enquanto estiver
+ * aberto, como no original: essa regra é do próprio app.css e não é
+ * tocada aqui. */
+html.active {
+  overflow: auto !important;
+}
+#preloader {
+  display: none !important;
+  pointer-events: none !important;
+}
